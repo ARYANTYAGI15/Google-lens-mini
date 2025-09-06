@@ -1,0 +1,36 @@
+# Core
+streamlit
+python-dotenv
+
+# Image processing
+opencv-python
+pillow
+
+# OCR engines
+paddleocr
+easyocr
+pytesseract
+
+# Hugging Face models
+transformers
+sentence-transformers
+torch
+torchvision
+
+# Vector store
+faiss-cpu
+
+# Utilities
+numpy
+pandas
+scikit-learn
+
+# Evaluation
+evaluate
+
+# Reranking / Cross-encoders
+rank-bm25
+
+# Detection
+ultralytics   # YOLOv8
+layoutparser  # Layout detection

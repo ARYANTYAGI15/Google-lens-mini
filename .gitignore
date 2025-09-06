@@ -1,0 +1,31 @@
+# Virtual environment
+venv/
+lens/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+
+# Data (local only, not in repo)
+data/uploads/
+data/processed/
+data/ocr_text/
+data/vectorstore/
+
+# Logs
+logs/
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Streamlit cache
+.streamlit/
+
+# OS-specific
+.DS_Store
+Thumbs.db
