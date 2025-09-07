@@ -1,15 +1,21 @@
 import easyocr
 from paddleocr import PaddleOCR
+from functools import lru_cache
 
-# EasyOCR init
-easyocr_reader = easyocr.Reader(['en'])
+# --- Lazy initialization ---
+@lru_cache(maxsize=1)
+def get_easyocr():
+    return easyocr.Reader(['en'])
 
-# PaddleOCR init (set cls here, not in predict)
-paddle_reader = PaddleOCR(use_angle_cls=True, lang='en')
+@lru_cache(maxsize=1)
+def get_paddle():
+    return PaddleOCR(use_angle_cls=True, lang='en')
 
 
+# --- OCR Functions ---
 def run_easyocr(img):
-    results = easyocr_reader.readtext(img)
+    reader = get_easyocr()
+    results = reader.readtext(img)
     return [
         {"text": text, "conf": float(conf), "bbox": bbox}
         for (bbox, text, conf) in results
@@ -17,24 +23,32 @@ def run_easyocr(img):
 
 
 def run_paddleocr(img_path):
-    results = paddle_reader.predict(img_path)
-    
+    reader = get_paddle()
+    results = reader.ocr(img_path)  # use .ocr for consistent output
+
     if not results:
         return []
-    
-    # First element contains OCR results
-    ocr_data = results[0]
-    
-    # Some versions put results under "res"
-    if "res" in ocr_data:
-        parsed = [
-            {"text": r["text"], "conf": float(r["confidence"]), "bbox": r["text_region"]}
-            for r in ocr_data["res"]
-        ]
-        return parsed
-    else:
-        # If structure is different, just return the raw output
-        return results
+
+    parsed = []
+    for res in results[0]:  # results[0] = list of detections
+        try:
+            bbox, (text, conf) = res
+            parsed.append({
+                "text": text,
+                "conf": float(conf),
+                "bbox": bbox
+            })
+        except Exception:
+            # In case structure changes
+            parsed.append({
+                "text": str(res),
+                "conf": 0.0,
+                "bbox": None
+            })
+    return parsed
+
+
+
 def run_best_ocr(img_path, preprocessed_img=None):
     """
     Runs both EasyOCR and PaddleOCR, compares avg confidence,
@@ -47,7 +61,7 @@ def run_best_ocr(img_path, preprocessed_img=None):
     Returns:
         dict with keys: engine, results, avg_conf
     """
-    # Run EasyOCR (if preprocessed image is provided, use it)
+    # Run EasyOCR
     easy_results = run_easyocr(preprocessed_img if preprocessed_img is not None else img_path)
     avg_easy_conf = sum(r["conf"] for r in easy_results) / len(easy_results) if easy_results else 0
 
