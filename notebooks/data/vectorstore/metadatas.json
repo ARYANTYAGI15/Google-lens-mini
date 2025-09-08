@@ -1,5 +1,10 @@
 [
   {
+    "chunk_id": "Mobilenetv2_c0",
+    "image_id": "Mobilenetv2",
+    "text": "Image ID: Mobilenetv2\n        OCR: n = 1280 n = 32 n = 96 n = 1280 128x128x3 128x128 64 x 64 32 x 32 Softmax Fully Connected Classifier MobileNetv2 Preprocessing 3x3 Conv, ReLU Max pool 2x2 [\n        Objects: \n        QR: \n        Caption: a diagram of the cell membrane"
+  },
+  {
     "chunk_id": "receipt_001_c0",
     "image_id": "receipt_001",
     "text": "Image ID: receipt_001\n        OCR: n = 1280 n = 32 n = 96 n = 1280 128x128x3 128x128 64 x 64 32 x 32 Softmax Fully Connected Classifier MobileNetv2 Preprocessing 3x3 Conv, ReLU Max pool 2x2 [\n        Objects: \n        QR: \n        Caption: a diagram of the cell membrane"

@@ -1,6 +1,7 @@
 import easyocr
 from paddleocr import PaddleOCR
 from functools import lru_cache
+import cv2
 
 # --- Lazy initialization ---
 @lru_cache(maxsize=1)

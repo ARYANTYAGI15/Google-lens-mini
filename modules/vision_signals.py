@@ -1,23 +1,24 @@
 import cv2
 import torch
-import streamlit as st
+from functools import lru_cache
 from PIL import Image
 from pyzbar.pyzbar import decode
 from ultralytics import YOLO
 from transformers import BlipProcessor, BlipForConditionalGeneration
 
 
-# --- Cached model loaders ---
-@st.cache_resource
+# --- Cached model loaders using lru_cache ---
+@lru_cache(maxsize=1)
 def get_yolo():
     return YOLO("yolov8n.pt")
 
-@st.cache_resource
+@lru_cache(maxsize=1)
 def get_blip():
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    return processor, model.to(device)
+    model.to(device)
+    return processor, model
 
 
 # --- Vision functions ---

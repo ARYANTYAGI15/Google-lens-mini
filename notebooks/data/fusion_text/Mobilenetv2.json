@@ -1,0 +1,7 @@
+{
+    "id": "Mobilenetv2",
+    "ocr_text": "n = 1280 n = 32 n = 96 n = 1280 128x128x3 128x128 64 x 64 32 x 32 Softmax Fully Connected Classifier MobileNetv2 Preprocessing 3x3 Conv, ReLU Max pool 2x2 [",
+    "objects": [],
+    "qr_codes": [],
+    "caption": "a diagram of the cell membrane"
+}
