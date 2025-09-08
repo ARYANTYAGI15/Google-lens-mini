@@ -34,3 +34,5 @@ rank-bm25
 # Detection
 ultralytics   # YOLOv8
 layoutparser  # Layout detection
+
+opencv-python-headless
