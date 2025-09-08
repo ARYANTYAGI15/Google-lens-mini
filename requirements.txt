@@ -3,8 +3,9 @@ streamlit
 python-dotenv
 
 # Image processing
-opencv-python
+opencv-python-headless
 pillow
+pyzbar
 
 # OCR engines
 paddleocr
@@ -31,8 +32,11 @@ evaluate
 # Reranking / Cross-encoders
 rank-bm25
 
-# Detection
-ultralytics   # YOLOv8
-layoutparser  # Layout detection
+# Detection / Layout
+ultralytics
+layoutparser
 
-opencv-python-headless
+# Optional / file uploads, API calls
+python-multipart
+requests
+typing-extensions

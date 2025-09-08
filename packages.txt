@@ -1,9 +1,16 @@
+# OpenCV / Pillow dependencies
 libgl1
 libglib2.0-0
-libzbar0
 libsm6
 libxext6
 libxrender1
 libgl1-mesa-glx
+
+# pyzbar dependency
+libzbar0
+
+# pytesseract dependency
 tesseract-ocr
+
+# Optional / scikit-learn multi-threading
 libgomp1
