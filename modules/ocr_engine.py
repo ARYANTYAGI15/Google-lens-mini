@@ -22,32 +22,29 @@ def run_easyocr(img):
     ]
 
 
-def run_paddleocr(img_path):
+def run_paddleocr(img_path, max_size=1280):
     reader = get_paddle()
-    results = reader.ocr(img_path)  # use .ocr for consistent output
+    img = cv2.imread(img_path)
+
+    # Resize if too large
+    h, w = img.shape[:2]
+    if max(h, w) > max_size:
+        scale = max_size / max(h, w)
+        img = cv2.resize(img, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+
+    results = reader.ocr(img)  # pass resized image, not path
 
     if not results:
         return []
 
     parsed = []
-    for res in results[0]:  # results[0] = list of detections
+    for res in results[0]:
         try:
             bbox, (text, conf) = res
-            parsed.append({
-                "text": text,
-                "conf": float(conf),
-                "bbox": bbox
-            })
+            parsed.append({"text": text, "conf": float(conf), "bbox": bbox})
         except Exception:
-            # In case structure changes
-            parsed.append({
-                "text": str(res),
-                "conf": 0.0,
-                "bbox": None
-            })
+            parsed.append({"text": str(res), "conf": 0.0, "bbox": None})
     return parsed
-
-
 
 def run_best_ocr(img_path, preprocessed_img=None):
     """

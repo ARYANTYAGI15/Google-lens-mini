@@ -1,29 +1,30 @@
-from ultralytics import YOLO
-from pyzbar.pyzbar import decode
 import cv2
-from transformers import BlipProcessor, BlipForConditionalGeneration
-from PIL import Image
 import torch
-from functools import lru_cache
+import streamlit as st
+from PIL import Image
+from pyzbar.pyzbar import decode
+from ultralytics import YOLO
+from transformers import BlipProcessor, BlipForConditionalGeneration
 
-# --- Lazy Loaders ---
-@lru_cache(maxsize=1)
+
+# --- Cached model loaders ---
+@st.cache_resource
 def get_yolo():
     return YOLO("yolov8n.pt")
 
-@lru_cache(maxsize=1)
+@st.cache_resource
 def get_blip():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
-    return processor, model, device
+    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    return processor, model.to(device)
 
 
-# --- Functions ---
+# --- Vision functions ---
 def detect_objects(img_path, conf_thresh=0.5):
-    yolo = get_yolo()
-    results = yolo(img_path, conf=conf_thresh)[0]
-    objects = [yolo.names[int(cls)] for cls in results.boxes.cls]
+    model = get_yolo()
+    results = model(img_path, conf=conf_thresh)[0]
+    objects = [model.names[int(cls)] for cls in results.boxes.cls]
     return list(set(objects))
 
 
@@ -34,9 +35,9 @@ def detect_qr(img_path):
 
 
 def generate_captions(img_path):
-    processor, model, device = get_blip()
+    processor, model = get_blip()
     image = Image.open(img_path).convert("RGB")
-    inputs = processor(images=image, return_tensors="pt").to(device)
+    inputs = processor(images=image, return_tensors="pt").to(model.device)
     out = model.generate(**inputs, max_new_tokens=50)
     return processor.decode(out[0], skip_special_tokens=True)
 
