@@ -90,7 +90,7 @@ Improve fusion algorithms for better combined signal accuracy.
 
 ###Author
 
-Your Name
+Aryan Tyagi
 
 GitHub: https://github.com/ARYANTYAGI15/
 
